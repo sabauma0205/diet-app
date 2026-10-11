@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name = "viewport" content="width = device-width, initial-scale=1.0">
+    <title>記録くん</title>
+    <link rel = "stylesheet" href = "style.css">
+</head>
+<body>
+    <main class = "container">
+
+        <h1>体重記録</h1>
+        <h2>目標体重</h2>
+        <input type="number" step = "0.1" id = "goalWeight">
+        <span>kg</span>
+        <button id = "goalButton">目標を設定</button>
+        <p id = "goalResult"></p>
+
+    <div class="card">
+            <p>本日の記録</p>
+            <div class="form-group">
+            <label>日付</label>
+            <input type="date" id="date">
+            </div>
+        <div class="form-group">
+            <label>体重</label>
+            <div class="weight-input">
+                <input type="number" step="0.1" id="weight">
+                <span>kg</span>
+            </div>
+        </div>
+            <button id="recordButton">記録する</button>
+            <p id="result"></p>
+    </div>
+        <div class="card">
+        <h2>記録履歴</h2>
+        <div id="history"></div>
+        </div>
+        <div class="card">
+        <h2>体重グラフ</h2>
+        <canvas id = "weightChart"></canvas>
+        </div>
+
+    </main>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="script.js"></script>
+
+</body>
+</html> 
