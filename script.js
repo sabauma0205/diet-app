@@ -11,10 +11,17 @@ const weightChart = document.getElementById("weightChart");
 const goalWeight = document.getElementById("goalWeight");
 const goalButton = document.getElementById("goalButton");
 const goalResult = document.getElementById("goalResult");
+const goalForm = document.getElementById("goalForm");
+const changeGoalButton = document.getElementById("changeGoalButton");
+
+changeGoalButton.style.display = "none";
 
 if (savedGoalWeight !== null) {
     goalResult.textContent = "目標体重:" + savedGoalWeight + " kg";
     goalWeight.value = savedGoalWeight;
+
+    goalForm.style.display = "none";
+    changeGoalButton.style.display = "block";
 }
 
 goalButton.addEventListener("click", function () {
@@ -22,22 +29,38 @@ goalButton.addEventListener("click", function () {
         goalResult.textContent = "目標体重を入力してください";
         return;
     }
+    chart.data.datasets[1].data = chart.data.labels.map(function () {
+    return Number(goalWeight.value);
+    });
+
+    chart.update();
     goalResult.textContent = "目標体重:" + goalWeight.value + " kg";
     localStorage.setItem("goalWeight", goalWeight.value);
+    goalForm.style.display = "none";
+    changeGoalButton.style.display = "block";
 })
+
+changeGoalButton.addEventListener("click", function(){
+    goalForm.style.display = "block";
+    changeGoalButton.style.display = "none";
+})
+
+//結果表示
 function showRecord(record) {
     const newRecord = document.createElement("p");
-    newRecord.textContent = record.date + " " + record.weight + " kg";
+    newRecord.textContent = formatDate(record.date) + " " + record.weight + " kg";
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "削除";
     newRecord.appendChild(deleteButton);
     history.appendChild(newRecord);
+    
     deleteButton.addEventListener("click", function () {
         const index = records.indexOf(record);
         records.splice(index, 1);
         localStorage.setItem("records", JSON.stringify(records));
         chart.data.labels.splice(index, 1);
         chart.data.datasets[0].data.splice(index, 1);
+        chart.data.datasets[1].data.splice(index, 1);
         chart.update();
         newRecord.remove();
     })
@@ -47,6 +70,7 @@ for (const record of records) {
     showRecord(record);
 }
 
+//記録ボタン
 recordButton.addEventListener("click", function () {
     if (dateInput.value === "" || weightInput.value === "") {
         result.textContent = "日付と体重を記入してください";
@@ -95,6 +119,7 @@ const weights = records.map(function (record) {
 const dates = records.map(function (record) {
     return record.date;
 });
+
 //グラフ
 const chart = new Chart(weightChart, {
     type: "line",
@@ -103,7 +128,29 @@ const chart = new Chart(weightChart, {
         labels: dates,
         datasets: [{
             label: "体重",
-            data: weights
+            data: weights,
+            borderWidth: 3,
+            tension: 0.3,
+            pointRadius: 4
+        },
+        {
+            label: "目標体重",
+            data: dates.map(function () {
+                if (goalWeight.value === "") {
+                    return null;
+                }
+
+                return Number(goalWeight.value);
+            }),
+
+            borderColor: "#2e7d32",
+            backgroundColor: "rgba(76, 175, 80, 0.12)",
+
+            borderWidth: 2,
+            borderDash: [8, 6],
+            pointRadius: 0,
+            fill: "start"
+
         }]
     }
 })
@@ -111,5 +158,20 @@ const chart = new Chart(weightChart, {
 function updateChart(record) {
     chart.data.labels.push(record.date);
     chart.data.datasets[0].data.push(record.weight);
+    if(goalWeight.value === ""){
+        chart.data.datasets[1].data.push(null);
+    }else{
+    chart.data.datasets[1].data.push(Number(goalWeight.value));
+    }
     chart.update();
+}
+
+function formatDate(date){
+    const parts = date.split("-");
+
+    const year = parts[0];
+    const month = parts[1];
+    const day = parts[2];
+
+    return year + "年" + month + "月" + day + "日";
 }
