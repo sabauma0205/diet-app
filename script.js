@@ -13,6 +13,7 @@ const goalButton = document.getElementById("goalButton");
 const goalResult = document.getElementById("goalResult");
 const goalForm = document.getElementById("goalForm");
 const changeGoalButton = document.getElementById("changeGoalButton");
+const historyButton = document.getElementById("historyButton");
 
 changeGoalButton.style.display = "none";
 
@@ -53,7 +54,7 @@ function showRecord(record) {
     deleteButton.textContent = "削除";
     newRecord.appendChild(deleteButton);
     history.appendChild(newRecord);
-    
+    //削除
     deleteButton.addEventListener("click", function () {
         const index = records.indexOf(record);
         records.splice(index, 1);
@@ -62,13 +63,26 @@ function showRecord(record) {
         chart.data.datasets[0].data.splice(index, 1);
         chart.data.datasets[1].data.splice(index, 1);
         chart.update();
-        newRecord.remove();
+        renderRecentRecords();
     })
 }
 
-for (const record of records) {
-    showRecord(record);
+renderRecentRecords();
+
+function renderRecentRecords(){
+    history.innerHTML = "";
+
+    const recentRecords = records.slice(-5).reverse();
+
+    for (const record of recentRecords){
+        showRecord(record);
+    }
+
 }
+//過去の記録ボタン
+historyButton.addEventListener("click", function(){
+    window.location.href = "history.html";
+});
 
 //記録ボタン
 recordButton.addEventListener("click", function () {
@@ -76,6 +90,11 @@ recordButton.addEventListener("click", function () {
         result.textContent = "日付と体重を記入してください";
         return;
     }
+    const weight = Number(weightInput.value);
+    if(weight < 20 || weight > 300){
+        result.textContent = "体重は20kg〜300kgの範囲で入力してください。";
+        return;
+        }
     const sameDate = records.some(function (record) {
         return record.date === dateInput.value;
     })
@@ -85,7 +104,7 @@ recordButton.addEventListener("click", function () {
     }
     const record = {
         date: dateInput.value,
-        weight: Number(weightInput.value)
+        weight: weight
     };
 
     if (goalWeight.value !== "") {
@@ -108,7 +127,7 @@ recordButton.addEventListener("click", function () {
 
     records.push(record);
     localStorage.setItem("records", JSON.stringify(records));
-    showRecord(record);
+    renderRecentRecords();
     updateChart(record);
     weightInput.value = "";
 
