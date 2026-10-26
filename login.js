@@ -24,7 +24,10 @@ signupButton.addEventListener("click", async function(){
 
     const{data,error} = await supabaseClient.auth.signUp({
         email: email,
-        password: password
+        password: password,
+         options: {
+        emailRedirectTo: "https://sabauma0205.github.io/diet-app/"
+    }
     });
     if(error){
         authResult.textContent = error.message;
