@@ -14,6 +14,7 @@ const goalResult = document.getElementById("goalResult");
 const goalForm = document.getElementById("goalForm");
 const changeGoalButton = document.getElementById("changeGoalButton");
 const historyButton = document.getElementById("historyButton");
+const logoutButton = document.getElementById("logoutButton");
 const SUPABASE_URL = "https://mujjplqnlozykzholpjx.supabase.co";
 const SUPABASE_KEY = "sb_publishable_MFQ0w2P-Cabsb9OuoEZ6AQ_MgBe5g2r";
 
@@ -37,6 +38,17 @@ async function checkLogin() {
 }
 
 checkLogin();
+//ログアウト
+logoutButton.addEventListener("click", async function () {
+    const { error } = await supabaseClient.auth.signOut();
+
+    if (error) {
+        console.log(error);
+        return;
+    }
+
+    window.location.href = "login.html";
+});
 
 if (savedGoalWeight !== null) {
     goalResult.textContent = "目標体重:" + savedGoalWeight + " kg";
