@@ -118,7 +118,7 @@ historyButton.addEventListener("click", function(){
 });
 
 //記録ボタン
-recordButton.addEventListener("click", function () {
+recordButton.addEventListener("click", async function () {
     if (dateInput.value === "" || weightInput.value === "") {
         result.textContent = "日付と体重を記入してください";
         return;
@@ -157,6 +157,30 @@ recordButton.addEventListener("click", function () {
     } else {
         result.textContent = dateInput.value + " " + weightInput.value + " kg";
     }
+
+    const { data: userData, error: userError } =
+    await supabaseClient.auth.getUser();
+
+if (userError) {
+    console.log(userError);
+    return;
+}
+const { error } =
+    await supabaseClient
+        .from("records")
+        .insert({
+            user_id: user.id,
+            date: dateInput.value,
+            weight: weight
+        });
+
+if (error) {
+    console.log(error);
+    result.textContent = "記録の保存に失敗しました";
+    return;
+}
+
+const user = userData.user;
 
     records.push(record);
     localStorage.setItem("records", JSON.stringify(records));
