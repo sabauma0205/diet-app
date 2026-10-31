@@ -18,6 +18,8 @@ const logoutButton = document.getElementById("logoutButton");
 const SUPABASE_URL = "https://mujjplqnlozykzholpjx.supabase.co";
 const SUPABASE_KEY = "sb_publishable_MFQ0w2P-Cabsb9OuoEZ6AQ_MgBe5g2r";
 
+console.log("script.js 読み込み成功");
+
 const supabaseClient =
     window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
