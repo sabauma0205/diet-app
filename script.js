@@ -165,6 +165,8 @@ if (userError) {
     console.log(userError);
     return;
 }
+
+const user = userData.user;
 const { error } =
     await supabaseClient
         .from("records")
@@ -179,8 +181,6 @@ if (error) {
     result.textContent = "記録の保存に失敗しました";
     return;
 }
-
-const user = userData.user;
 
     records.push(record);
     localStorage.setItem("records", JSON.stringify(records));
