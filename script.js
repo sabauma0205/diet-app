@@ -4,7 +4,7 @@ const result = document.getElementById("result");
 const dateInput = document.getElementById("date");
 const today = new Date();
 dateInput.value = today.toISOString().split("T")[0];
-const records = JSON.parse(localStorage.getItem("records")) || [];
+const let records = [];
 const savedGoalWeight = localStorage.getItem("goalWeight");
 const history = document.getElementById("history")
 const weightChart = document.getElementById("weightChart");
@@ -38,6 +38,23 @@ async function checkLogin() {
 }
 
 checkLogin();
+
+async function loadRecords() {
+
+    const { data, error } =
+        await supabaseClient
+            .from("records")
+            .select("*")
+            .order("date", { ascending: true });
+
+    if (error) {
+        console.log(error);
+        return;
+    }
+
+    loadRecords();
+}
+
 //ログアウト
 logoutButton.addEventListener("click", async function () {
     const { error } = await supabaseClient.auth.signOut();
