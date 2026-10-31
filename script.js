@@ -34,7 +34,10 @@ async function checkLogin() {
 
     if (data.session === null) {
         window.location.href = "login.html";
+        return;
     }
+
+    await loadRecords();
 }
 
 checkLogin();
@@ -52,7 +55,11 @@ async function loadRecords() {
         return;
     }
 
-    loadRecords();
+    records = data;
+
+    renderRecentRecords();
+
+    console.log("取得した記録:", records);
 }
 
 //ログアウト
