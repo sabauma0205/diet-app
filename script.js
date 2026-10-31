@@ -54,6 +54,7 @@ async function loadRecords() {
         console.log(error);
         return;
     }
+    console.log("Supabaseから取得:", data);
 
     records = data;
 
