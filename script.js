@@ -116,12 +116,10 @@ function showRecord(record) {
     deleteButton.addEventListener("click", function () {
         const index = records.indexOf(record);
         records.splice(index, 1);
-        localStorage.setItem("records", JSON.stringify(records));
         chart.data.labels.splice(index, 1);
         chart.data.datasets[0].data.splice(index, 1);
         chart.data.datasets[1].data.splice(index, 1);
         chart.update();
-        renderRecentRecords();
     })
 }
 
